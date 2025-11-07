@@ -1,0 +1,162 @@
+### ==============================================
+### Banking System API - Test Requests
+### Base URL: http://localhost:5186
+### ==============================================
+
+### 1. Получить счет по ID
+@BankingSystem = http://localhost:5186
+GET {{BankingSystem}}/api/accounts/1
+Accept: application/json
+
+###
+
+### 2. Получить счета клиента
+GET {{BankingSystem}}/api/accounts/customer/1
+Accept: application/json
+
+###
+
+### 3. Получить баланс счета
+GET {{BankingSystem}}/api/accounts/1/balance
+Accept: application/json
+
+###
+
+### 4. Получить информацию о транзакции
+GET {{BankingSystem}}/api/transactions/1
+Accept: application/json
+
+###
+
+### 5. Получить историю транзакций счета
+GET {{BankingSystem}}/api/transactions/account/1?page=1&pageSize=10
+Accept: application/json
+
+###
+
+### 6. Пополнить счет
+POST {{BankingSystem}}/api/transactions/deposit
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 1000.00,
+  "description": "Тестовое пополнение через HTTP Client"
+}
+
+###
+
+### 7. Снять средства
+POST {{BankingSystem}}/api/transactions/withdraw
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 500.00,
+  "description": "Тестовое снятие через HTTP Client"
+}
+
+###
+
+### 8. Перевести средства
+POST {{BankingSystem}}/api/transactions/transfer
+Content-Type: application/json
+
+{
+  "fromAccountId": 1,
+  "toAccountId": 2,
+  "amount": 500.00,
+  "description": "Тест после удаления UNIQUE constraint"
+}
+
+###
+
+### 9. Получить все счета второго клиента
+GET {{BankingSystem}}/api/accounts/customer/2
+Accept: application/json
+
+###
+
+### 10. Пополнить второй счет
+POST {{BankingSystem}}/api/transactions/deposit
+Content-Type: application/json
+
+{
+  "accountId": 2,
+  "amount": 5000.00,
+  "description": "Пополнение сберегательного счета"
+}
+
+###
+
+### 11. Перевод с 1 на 3 счет
+POST {{BankingSystem}}/api/transactions/transfer
+Content-Type: application/json
+
+{
+  "fromAccountId": 1,
+  "toAccountId": 3,
+  "amount": 1500.00,
+  "description": "Перевод Нигине"
+}
+
+###
+
+### 12. Проверить баланс после операций
+GET {{BankingSystem}}/api/accounts/1/balance
+Accept: application/json
+
+###
+
+### 13. История транзакций первого счета (последние 20)
+GET {{BankingSystem}}/api/transactions/account/1?page=1&pageSize=20
+Accept: application/json
+
+###
+
+### ==============================================
+### Тесты на ошибки
+### ==============================================
+
+### 14. Попытка снять больше, чем есть на счете (должна провалиться)
+POST {{BankingSystem}}/api/transactions/withdraw
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 500.00,
+  "description": "Попытка снять слишком много"
+}
+
+###
+
+### 15. Получить несуществующий счет (должен вернуть 404)
+GET {{BankingSystem}}/api/accounts/999
+Accept: application/json
+
+###
+
+### 16. Перевод с несуществующего счета (должен провалиться)
+POST {{BankingSystem}}/api/transactions/transfer
+Content-Type: application/json
+
+{
+  "fromAccountId": 999,
+  "toAccountId": 1,
+  "amount": 100.00,
+  "description": "Перевод с несуществующего счета"
+}
+
+###
+
+### 17. Пополнение с отрицательной суммой (должно провалиться)
+POST {{BankingSystem}}/api/transactions/deposit
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": -100.00,
+  "description": "Отрицательное пополнение"
+}
+
+###
