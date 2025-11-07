@@ -1,0 +1,273 @@
+### ==============================================
+### Authentication & Authorization Tests
+### Base URL: http://localhost:5186
+### ==============================================
+
+@BankingSystem = http://localhost:5186
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJhbGlqb24iLCJlbWFpbCI6ImFsaWpvbi5yYWhpbW92QGV4YW1wbGUuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwiRnVsbE5hbWUiOiLQkNC70LjQtNC20L7QvSDQoNCw0YXQuNC80L7QsiIsIm5iZiI6MTc2MjUxMDc4NSwiZXhwIjoxNzYyNTE0Mzg1LCJpYXQiOjE3NjI1MTA3ODUsImlzcyI6IkJhbmtpbmdTeXN0ZW0iLCJhdWQiOiJCYW5raW5nU3lzdGVtVXNlcnMifQ.vC7FVTpG8vQ4KTwwyALk9Khp7o1kNe9yKndrhWZODSs
+
+### ==============================================
+### 1. РЕГИСТРАЦИЯ (Register)
+### ==============================================
+
+### 1.1 Регистрация простого пользователя (без Customer данных)
+POST {{BankingSystem}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "behruz",
+  "password": "gangsta",
+  "email": "gangsta@example.com",
+  "fullName": "Behruz Gafurov",
+  "role": "Customer"
+}
+
+###
+
+### 1.2 Регистрация клиента с полными данными
+POST {{BankingSystem}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "alijon",
+  "password": "Alijon123!",
+  "email": "alijon.rahimov@example.com",
+  "fullName": "Алиджон Рахимов",
+  "role": "Customer",
+  "firstName": "Алиджон",
+  "lastName": "Рахимов",
+  "middleName": "Джумаевич",
+  "dateOfBirth": "1995-08-20",
+  "phoneNumber": "+992918555666",
+  "passportNumber": "DD4567890",
+  "address": "ул. Дружбы Народов 15",
+  "city": "Душанбе",
+  "country": "Tajikistan"
+}
+
+###
+
+### 1.3 Регистрация менеджера
+POST {{BankingSystem}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "manager1",
+  "password": "Manager123!",
+  "email": "manager1@bank.tj",
+  "fullName": "Менеджер Банка",
+  "role": "Manager"
+}
+
+###
+
+### ==============================================
+### 2. ВХОД В СИСТЕМУ (Login)
+### ==============================================
+
+### 2.1 Успешный вход
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+
+###
+
+### 2.2 Вход с неверным паролем (должен провалиться)
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WrongPassword"
+}
+
+###
+
+### 2.3 Вход с несуществующим пользователем
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "SomePassword123"
+}
+
+###
+
+### 2.4 Вход нового пользователя
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "alijon",
+  "password": "Alijon123!"
+}
+
+###
+
+### ==============================================
+### 3. ПРОВЕРКА ТОКЕНА
+### ==============================================
+
+### 3.1 Проверка токена (нужно вставить реальный токен из ответа login)
+GET {{BankingSystem}}/api/auth/verify
+Authorization: Bearer {{token}}
+
+###
+
+### ==============================================
+### 4. ЗАЩИЩЕННЫЕ ENDPOINTS (с авторизацией)
+### ==============================================
+
+### 4.1 Получить счета клиента (с токеном)
+GET {{BankingSystem}}/api/accounts/customer/1
+Authorization: Bearer {{token}}
+
+###
+
+### 4.2 Попытка доступа без токена (должна провалиться с 401)
+GET {{BankingSystem}}/api/accounts/customer/1
+
+###
+
+### 4.3 Пополнение счета с авторизацией
+POST {{BankingSystem}}/api/transactions/deposit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "accountId": 1,
+  "amount": 5000.00,
+  "description": "Пополнение с авторизацией"
+}
+
+###
+
+### ==============================================
+### 5. ТЕСТ НА БЛОКИРОВКУ АККАУНТА
+### ==============================================
+
+### 5.1 Первая неудачная попытка
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WrongPassword1"
+}
+
+###
+
+### 5.2 Вторая неудачная попытка
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WrongPassword2"
+}
+
+###
+
+### 5.3 Третья неудачная попытка
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WrongPassword3"
+}
+
+###
+
+### 5.4 Четвертая неудачная попытка
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WrongPassword4"
+}
+
+###
+
+### 5.5 Пятая неудачная попытка (аккаунт должен заблокироваться)
+POST {{BankingSystem}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "WrongPassword5"
+}
+
+###
+
+### ==============================================
+### 6. ТЕСТЫ ВАЛИДАЦИИ
+### ==============================================
+
+### 6.1 Регистрация с коротким паролем (должна провалиться)
+POST {{BankingSystem}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "shortpass",
+  "password": "12345",
+  "email": "short@example.com",
+  "fullName": "Short Pass User",
+  "role": "Customer"
+}
+
+###
+
+### 6.2 Регистрация с некорректным email (должна провалиться)
+POST {{BankingSystem}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "bademail",
+  "password": "Password123!",
+  "email": "not-an-email",
+  "fullName": "Bad Email User",
+  "role": "Customer"
+}
+
+###
+
+### 6.3 Регистрация с существующим username (должна провалиться)
+POST {{BankingSystem}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "NewPassword123!",
+  "email": "newemail@example.com",
+  "fullName": "Duplicate Username",
+  "role": "Customer"
+}
+
+###
+
+### ==============================================
+### ИНСТРУКЦИЯ ПО ИСПОЛЬЗОВАНИЮ
+### ==============================================
+###
+### 1. Запустите проект: dotnet run
+### 2. Выполните запрос регистрации (1.2) или логина (2.1)
+### 3. Скопируйте токен из ответа (поле "token")
+### 4. Вставьте токен в переменную @token в начале файла
+### 5. Используйте токен для защищенных endpoints (раздел 4)
+###
+### Формат токена в ответе:
+### {
+###   "success": true,
+###   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+###   "message": "...",
+###   "user": { ... }
+### }
+###
+### ==============================================
