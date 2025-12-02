@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using BankingSystem.API.DTOs;
 using BankingSystem.API.Interfaces;
 using BankingSystem.API.Models;
-using BCrypt.Net;
 
 namespace BankingSystem.API.Services;
 

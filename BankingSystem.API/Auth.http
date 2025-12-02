@@ -4,7 +4,7 @@
 ### ==============================================
 
 @BankingSystem = http://localhost:5186
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwidW5pcXVlX25hbWUiOiJhbGlqb24iLCJlbWFpbCI6ImFsaWpvbi5yYWhpbW92QGV4YW1wbGUuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwiRnVsbE5hbWUiOiLQkNC70LjQtNC20L7QvSDQoNCw0YXQuNC80L7QsiIsIm5iZiI6MTc2MjUxMDc4NSwiZXhwIjoxNzYyNTE0Mzg1LCJpYXQiOjE3NjI1MTA3ODUsImlzcyI6IkJhbmtpbmdTeXN0ZW0iLCJhdWQiOiJCYW5raW5nU3lzdGVtVXNlcnMifQ.vC7FVTpG8vQ4KTwwyALk9Khp7o1kNe9yKndrhWZODSs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidW5pcXVlX25hbWUiOiJiZWhydXoiLCJlbWFpbCI6ImdhbmdzdGFAZXhhbXBsZS5jb20iLCJyb2xlIjoiQ3VzdG9tZXIiLCJGdWxsTmFtZSI6IkJlaHJ1eiBHYWZ1cm92IiwibmJmIjoxNzY0Njc1NTgxLCJleHAiOjE3NjQ2NzkxODEsImlhdCI6MTc2NDY3NTU4MSwiaXNzIjoiQmFua2luZ1N5c3RlbSIsImF1ZCI6IkJhbmtpbmdTeXN0ZW1Vc2VycyJ9._XCN3ZzA8TpXRFKGAjskOg6MsoLryIucgKQaONoMNkM
 
 ### ==============================================
 ### 1. РЕГИСТРАЦИЯ (Register)
@@ -70,8 +70,8 @@ POST {{BankingSystem}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "Admin123!"
+  "username": "behruz",
+  "password": "gangsta"
 }
 
 ###
@@ -141,7 +141,7 @@ Authorization: Bearer {{token}}
 
 {
   "accountId": 1,
-  "amount": 5000.00,
+  "amount": 500.00,
   "description": "Пополнение с авторизацией"
 }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using BankingSystem.API.DTOs;
 using BankingSystem.API.Interfaces;
 
@@ -21,6 +22,7 @@ public class AuthController : ControllerBase
     /// Вход в систему (Login)
     /// </summary>
     [HttpPost("login")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AuthResultDto>> Login([FromBody] LoginRequest request)
@@ -56,6 +58,7 @@ public class AuthController : ControllerBase
     /// Регистрация нового пользователя
     /// </summary>
     [HttpPost("register")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthResultDto>> Register([FromBody] RegisterRequest request)
@@ -91,6 +94,7 @@ public class AuthController : ControllerBase
     /// Проверка токена (для тестирования)
     /// </summary>
     [HttpGet("verify")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult VerifyToken()

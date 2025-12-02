@@ -83,10 +83,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // Регистрируем репозитории
-builder.Services.AddScoped<IAccountRepository>(sp => new AccountRepository(connectionString));
-builder.Services.AddScoped<ITransactionRepository>(sp => new TransactionRepository(connectionString));
-builder.Services.AddScoped<IUserRepository>(sp => new UserRepository(connectionString));
-builder.Services.AddScoped<ICustomerRepository>(sp => new CustomerRepository(connectionString));
+builder.Services.AddScoped<IAccountRepository>(_ => new AccountRepository(connectionString));
+builder.Services.AddScoped<ITransactionRepository>(_ => new TransactionRepository(connectionString));
+builder.Services.AddScoped<IUserRepository>(_ => new UserRepository(connectionString));
+builder.Services.AddScoped<ICustomerRepository>(_ => new CustomerRepository(connectionString));
 
 // Регистрируем сервисы
 builder.Services.AddScoped<ITransactionService>(sp =>

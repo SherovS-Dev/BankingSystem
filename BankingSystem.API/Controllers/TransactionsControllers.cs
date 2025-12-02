@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using BankingSystem.API.DTOs;
 using BankingSystem.API.Interfaces;
 using BankingSystem.API.Models;
@@ -7,6 +8,7 @@ namespace BankingSystem.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TransactionsController : ControllerBase
 {
     private readonly ITransactionService _transactionService;
